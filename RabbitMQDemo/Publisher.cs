@@ -22,20 +22,25 @@ namespace RabbitMQDemo
             // 4️⃣ Mesaj göndereceğimiz kuyruğu tanımlıyoruz
             // Eğer bu kuyruk daha önce tanımlandıysa dokunulmaz, sadece mevcut olan kullanılır
             channel.QueueDeclare(queue: queueName,
-                             durable: false,        // mesajlar diske yazılmasın (kapanınca silinir)
+                             durable: true,        // mesajlar diske yazılmasın (kapanınca silinir)
                              exclusive: false,      // sadece bu bağlantı mı kullanır? Hayır
                              autoDelete: false,     // kuyruğa kimse bağlı değilse otomatik silinsin mi? Hayır
                              arguments: null);      // ek ayar yok
-         
+                                                    // 🧱 Mesajı kalıcı olarak işaretliyoruz
+            var properties = channel.CreateBasicProperties();
+            properties.Persistent = true;
             // 5️⃣ Mesajı byte dizisine (byte[]) çeviriyoruz çünkü RabbitMQ byte alır
             var body =Encoding.UTF8.GetBytes(message);
 
-            // 6️⃣ Mesajı kuyruğa gönderiyoruz
-            channel.BasicPublish(exchange: "",          // boş = default exchange
-                             routingKey: queueName, // hangi kuyruğa gidecek?
-                             basicProperties: null, // ekstra başlık vs yok
-                             body: body);
-
+            //// 6️⃣ Mesajı kuyruğa gönderiyoruz
+            //channel.BasicPublish(exchange: "",          // boş = default exchange
+            //                 routingKey: queueName, // hangi kuyruğa gidecek?
+            //                 basicProperties: null, // ekstra başlık vs yok
+            //                 body: body);
+            channel.BasicPublish(exchange: "",
+                     routingKey: queueName,
+                     basicProperties: properties, // 🔥 properties.Persistent = true olmasa, kuyruk kalıcı olsa bile mesaj uçabilir.
+                     body: Encoding.UTF8.GetBytes(message));
             Console.WriteLine($"📤 Mesaj gönderildi: {message}");
 
         }

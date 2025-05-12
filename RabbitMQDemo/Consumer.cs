@@ -20,7 +20,7 @@ namespace RabbitMQDemo
 
             // Producer'daki kuyrukla birebir aynı özelliklerde tanımlanmalı
             channel.QueueDeclare(queue: queueName,
-                                 durable: false,
+                                 durable: true,
                                  exclusive: false,
                                  autoDelete: false,
                                  arguments: null);
