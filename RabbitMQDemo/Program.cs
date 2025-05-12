@@ -115,6 +115,18 @@ switch (secim)
 
         Console.WriteLine("Consumer_Fanout1 ve Consumer_Fanout2 ayrı çalıştırılmalı.");
         break;
+    case "15":
+        Console.Write("Routing key gir (örnek: log.info, user.created): ");
+        var rk = Console.ReadLine();
+        Console.Write("Mesaj: ");
+        var msg15 = Console.ReadLine();
+        Publisher_Topic.Send(rk, msg15);
+        break;
+
+    case "16":
+        Console.WriteLine("Ayrı çalıştır: Consumer_Topic_Log.Listen()");
+        Console.WriteLine("Ayrı çalıştır: Consumer_Topic_User.Listen()");
+        break;
 
     case "0":
         Console.WriteLine("👋 Görüşmek üzere!");
