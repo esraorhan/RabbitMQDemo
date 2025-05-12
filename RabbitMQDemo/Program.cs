@@ -22,8 +22,8 @@ Console.WriteLine("10 → prefetch Dinle (GELİYOR)");
 Console.WriteLine("11 → Fanout Exchange Gönder (GELİYOR)");
 Console.WriteLine("12 → Fanout Exchange Dinle (GELİYOR)");
 
-Console.WriteLine("13 → Topic Exchange Gönder (GELİYOR)");
-Console.WriteLine("14 → Topic Exchange Dinle (GELİYOR)");
+Console.WriteLine("13 → FANOUT EXCHANGE Gönder (GELİYOR)");
+Console.WriteLine("14 → FANOUT EXCHANGE Dinle (GELİYOR)");
 
 Console.WriteLine("0 → Çıkış");
 
@@ -88,10 +88,32 @@ switch (secim)
         Console.WriteLine("Başka terminalde çalıştır: Consumer_Prefetch2.Listen();");
         break;
     case "11":
+        Console.Write("Log seviyesi (info / error): ");
+        var sev = Console.ReadLine();
+        Console.Write("Mesaj: ");
+        var msg11 = Console.ReadLine();
+        Publisher_Direct.Send(sev, msg11);
+        break;
     case "12":
+        Console.WriteLine("İki consumer başlatılıyor...");
+
+        var infoThread = new Thread(() => Consumer_Info.Listen());
+        var errorThread = new Thread(() => Consumer_Error.Listen());
+
+        infoThread.Start();
+        errorThread.Start();
+
+        Console.WriteLine("⏳ Her iki consumer da çalışıyor. Enter’a basmak çıkışa neden olur.");
+        Console.ReadLine(); // program açık kalsın
+        break;
     case "13":
+        Console.Write("Mesajı gir (herkese yayılacak): ");
+        var msg13 = Console.ReadLine();
+        Publisher_Fanout.Broadcast(msg13);
+        break;
     case "14":
-        Console.WriteLine("🛠 Exchange testleri sıradaki konularda eklenecek...");
+
+        Console.WriteLine("Consumer_Fanout1 ve Consumer_Fanout2 ayrı çalıştırılmalı.");
         break;
 
     case "0":
